@@ -76,5 +76,6 @@ export function getResourceContentLength(resource: any): number {
 }
 
 function stripQueryString(url) {
-  return url.replace(QUERY_STRING_PATTERN, '');
+  // return url.replace(QUERY_STRING_PATTERN, '');
+  return url; // Added by HoloLab
 }

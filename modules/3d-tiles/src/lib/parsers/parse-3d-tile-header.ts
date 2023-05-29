@@ -44,6 +44,19 @@ export function normalizeTileData(tile, options) {
   if (tile.content) {
     const contentUri = tile.content.uri || tile.content.url;
     tile.contentUrl = `${options.basePath}/${contentUri}`;
+
+    // Added by HoloLab
+    if (contentUri.startsWith("/")) {
+      const parentUrl = new URL(options.parentUrl)
+      const queryString = parentUrl.search.substring(1);
+
+      tile.contentUrl = "".concat(parentUrl.origin).concat(contentUri)
+      if (tile.contentUrl.indexOf("?") > -1) {
+        tile.contentUrl = tile.contentUrl.concat("&").concat(queryString);
+      } else {
+        tile.contentUrl = tile.contentUrl.concat("?").concat(queryString);
+      }
+    }
   }
   tile.id = tile.contentUrl;
   tile.lodMetricType = LOD_METRIC_TYPE.GEOMETRIC_ERROR;
@@ -67,7 +80,10 @@ export function normalizeTileHeaders(tileset) {
     const tile = stack.pop() || {};
     const children = tile.children || [];
     for (const childHeader of children) {
-      normalizeTileData(childHeader, {basePath});
+      normalizeTileData(childHeader, {
+        basePath,
+        parentUrl: tileset.url // Added by HoloLab
+      });
       stack.push(childHeader);
     }
   }

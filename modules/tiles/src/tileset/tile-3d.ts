@@ -382,7 +382,9 @@ export default class TileHeader {
         ...this.tileset.loadOptions,
         [loader.id]: {
           ...this.tileset.loadOptions[loader.id],
-          isTileset: this.type === 'json',
+          // Changed by HoloLab
+          // isTileset: this.type === 'json',
+          isTileset: this.type.startsWith('json'),
           ...this._getLoaderSpecificOptions(loader.id)
         }
       };
